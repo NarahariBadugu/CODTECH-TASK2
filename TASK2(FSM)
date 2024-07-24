@@ -1,4 +1,5 @@
-// DESIG CODE
+// DESIGN CODE
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -66,12 +67,13 @@ end architecture Behavioral;
 
 
 //TESTBENCH CODE
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-​
+
 entity fsm_tb is
 end entity fsm_tb;
-​
+
 architecture Behavioral of fsm_tb is
     -- Constants and signals
     constant clk_period : time := 10 ns;
@@ -81,7 +83,7 @@ architecture Behavioral of fsm_tb is
     signal x     : std_logic := '0';
     signal y     : std_logic := '0';
     signal z     : std_logic;
-​
+
     -- Instantiate the FSM
     component FSM_example
         Port (
@@ -92,7 +94,7 @@ architecture Behavioral of fsm_tb is
             z     : out std_logic
         );
     end component;
-​
+
 begin
     -- Clock process
     process
@@ -105,10 +107,55 @@ begin
         end loop;
         wait;
     end process;
-​
+
     -- Reset process
     process
     begin
         reset <= '1';
         wait for 20 ns;
         reset <= '0';
+        wait;
+    end process;
+
+    -- Stimulus process
+    process
+    begin
+        wait for 30 ns;  -- Wait for initial stabilization
+        
+        -- Test case 1: x = '0', y = '0'
+        x <= '0'; y <= '0';
+        wait for 20 ns;
+        assert z = '0' report "Test case 1 failed" severity error;
+        
+        -- Test case 2: x = '1', y = '0'
+        x <= '1'; y <= '0';
+        wait for 20 ns;
+        assert z = '0' report "Test case 2 failed" severity error;
+        
+        -- Test case 3: x = '0', y = '1'
+        x <= '0'; y <= '1';
+        wait for 20 ns;
+        assert z = '0' report "Test case 3 failed" severity error;
+        
+        -- Test case 4: x = '1', y = '1'
+        x <= '1'; y <= '1';
+        wait for 20 ns;
+        assert z = '1' report "Test case 4 failed" severity error;
+        
+        -- Add more test cases as needed
+        
+        wait;
+    end process;
+
+    -- Instantiate the FSM
+    dut: FSM_example
+        port map (
+            clk   => clk,
+            reset => reset,
+            x     => x,
+            y     => y,
+            z     => z
+        );
+
+end architecture Behavioral;
+
